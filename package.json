@@ -1,0 +1,24 @@
+{
+  "name": "snake",
+  "version": "0.0.0",
+  "description": "A mobile optimised take on Snake",
+  "author": "Iain Reid <iainreid382@gmail.com> (https://chaff.land)",
+  "homepage": "https://snake.chaff.land/",
+  "scripts": {
+    "build": "parcel build index.html",
+    "lint": "eslint src",
+    "start": "parcel index.html",
+    "test": "echo \"Warn: no test specified\""
+  },
+  "bugs": {
+    "url": "https://github.com/iainreid820/snake/issues"
+  },
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "@emphori/eslint-config": "^0.1.7",
+    "eslint": "^6.8.0",
+    "parcel-bundler": "^1.12.4",
+    "parcel-plugin-cname": "^1.0.0"
+  }
+}
