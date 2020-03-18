@@ -65,7 +65,7 @@ async function startGame() {
       return writeText('Game over!') || onClick(startGame)
     }
 
-    if (Math.sqrt((applePos.x - x2) ** 2 + (applePos.y - y2) ** 2) < scale(4)) {
+    if (Math.sqrt((applePos.x - x2) ** 2 + (applePos.y - y2) ** 2) <= scale(4)) {
       console.log("eat")
     }
     /**
