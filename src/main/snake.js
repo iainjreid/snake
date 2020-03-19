@@ -1,6 +1,6 @@
 'use strict'
 
-const canvas = document.querySelector('#snake-canvas')
+const canvas = document.querySelector('.game-canvas')
 const ctx = canvas.getContext('2d')
 
 resizeCanvas()
@@ -46,7 +46,7 @@ async function startGame() {
   clearCanvas()
   let applePos = spawnApple()
 
-  while (true) {
+  ;(function tick() {
     let { x1, y1, cpx, cpy, x2, y2 } = journey[0]
 
     cpx = x1 + x1 - cpx
@@ -65,15 +65,18 @@ async function startGame() {
       return writeText('Game over!') || onClick(startGame)
     }
 
-    if (Math.sqrt((applePos.x - x2) ** 2 + (applePos.y - y2) ** 2) <= scale(4)) {
-      console.log("eat")
+    if (Math.sqrt((applePos.x - scale(7) - x2) ** 2 + (applePos.y - scale(7) - y2) ** 2) <= scale(14)) {
+      score++
+      removeApple(applePos)
+      applePos = spawnApple()
     }
     /**
      * Draw the trail
      */
-    if (score + scale(40) < journey.length) {
+    if (score * 10 + scale(40) < journey.length) {
       const { x1, y1, cpx, cpy, x2, y2 } = journey.pop()
 
+      ctx.lineCap = "square";
       ctx.lineWidth = scale(16)
       ctx.strokeStyle = '#bcf8e8'
       ctx.beginPath()
@@ -88,6 +91,7 @@ async function startGame() {
     {
       const { x1, y1, cpx, cpy, x2, y2 } = journey[0]
 
+      ctx.lineCap = "square";
       ctx.lineWidth = scale(14)
       ctx.strokeStyle = '#420016'
       ctx.beginPath()
@@ -98,8 +102,8 @@ async function startGame() {
 
     writeScore()
 
-    await wait(16);
-  }
+    requestAnimationFrame(() => tick())
+  })()
 }
 
 document.body.onclick = () => {
@@ -155,14 +159,12 @@ window.addEventListener('keyup', (evt) => {
   }
 }, false)
 
-function wait(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms)
-  })
-}
+window.addEventListener('resize', () => {
+  return resizeCanvas()
+})
 
 function resizeCanvas() {
-  const width = innerWidth * 0.93
+  const width = canvas.parentElement.clientWidth
   const height = width / 16 * 9
 
   canvas.style.width = width + 'px'
@@ -173,15 +175,11 @@ function resizeCanvas() {
 }
 
 function clearCanvas() {
-  ctx.fillStyle = '#b5ffec'
-  ctx.fillRect(0, 0, canvas.width, canvas.height)
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
 }
 
 function writeScore() {
-  ctx.font = `700 ${scale(16)}px Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace`
-  ctx.fillStyle = '#000'
-  ctx.textAlign = 'left'
-  ctx.fillText(score, scale(20), scale(36))
+  document.querySelector("div.game-score").innerHTML = score
 }
 
 function writeText(text) {
@@ -196,6 +194,7 @@ function writeText(text) {
   ctx.fillStyle = '#fff'
   ctx.strokeStyle = '#000'
 
+  ctx.beginPath()
   ctx.rect(boxPosX, boxPosY, boxWidth, boxHeight)
 
   ctx.fill()
@@ -212,10 +211,25 @@ function spawnApple() {
   const x = Math.random() * canvas.width
   const y = Math.random() * canvas.height
 
-  ctx.fillStyle = '#ff3838'
-  ctx.fillRect(x, y, scale(10), scale(10))
+  const size = scale(10)
 
-  return { x, y }
+  ctx.beginPath()
+  ctx.fillStyle = '#ff3838'
+  ctx.arc(x, y, size / 2, 0, 2 * Math.PI)
+  ctx.fill()
+  return {
+    x: x + size / 2,
+    y: y + size / 2
+  }
+}
+
+function removeApple({ x, y }) {
+  const size = scale(12)
+
+  ctx.beginPath()
+  ctx.fillStyle = '#b5ffec'
+  ctx.arc(x - size / 2, y - size / 2, size, 0, 2 * Math.PI)
+  ctx.fill()
 }
 
 function spawnBug() {

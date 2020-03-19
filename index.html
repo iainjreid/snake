@@ -10,9 +10,22 @@
   </head>
 
   <body>
-    <canvas id="snake-canvas">
-      It looks like your browser does not support the canvas tag...
-    </canvas>
+    <div class="layout">
+      <div class="layout-content">
+        <h1>Snake</h1>
+
+        <div>
+          Use the L/R arrow keys or A/D to control the snake.
+        </div>
+      </div>
+
+      <div class="game-window">
+        <div class="game-score">0</div>
+        <canvas class="game-canvas">
+          It looks like your browser does not support the canvas tag...
+        </canvas>
+      </div>
+    </div>
 
     <script src="./src/main/snake.js"></script>
   </body>
